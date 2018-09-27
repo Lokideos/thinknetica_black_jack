@@ -77,9 +77,10 @@ loop do
       puts "Dealer hand :#{dealer.hand}"
       puts "Dealer points: #{dealer.points}"
       result = "You lost it. (O_O)" if player.points > 21
-      result ||= "You lost it. (O_O)" if dealer.points > player.points && dealer.points < 21
+      result ||= "You lost it. (O_O)" if dealer.points > player.points && dealer.points <= 21
       result ||= "You win" if player.points > dealer.points
       result ||= "You win" if dealer.points > player.points && dealer.points > 21
+      result ||= "This is draw" if dealer.points == player.points
     end
   when "win"
     puts "Player hand: #{player.hand}"
@@ -87,9 +88,10 @@ loop do
     puts "Dealer hand :#{dealer.hand}"
     puts "Dealer points: #{dealer.points}"
     result = "You lost it. (O_O)" if player.points > 21
-    result ||= "You lost it. (O_O)" if dealer.points > player.points && dealer.points < 21
+    result ||= "You lost it. (O_O)" if dealer.points > player.points && dealer.points <= 21
     result ||= "You win" if player.points > dealer.points
     result ||= "You win" if dealer.points > player.points && dealer.points > 21
+    result ||= "This is draw" if dealer.points == player.points
   else
     puts "dunno"
   end
