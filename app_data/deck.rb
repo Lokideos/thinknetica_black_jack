@@ -4,8 +4,9 @@ class Deck
   attr_accessor :cards
 
   BASIC_CARDS = %w[2 3 4 5 6 7 8 9 10].freeze
-  TEN_VALUE_CARDS = %w[J Q K].freeze
+  NON_NUMBER_CARDS = %w[J Q K].freeze
   LOWEST_VALUE = 2
+  HIGHEST_VALUE = 10
 
   def initialize
     @cards = {}
@@ -31,9 +32,9 @@ class Deck
   end
 
   def fill_deck_with_ten_value_cards
-    card_value = 10
+    card_value = HIGHEST_VALUE
 
-    TEN_VALUE_CARDS.each do |card|
+    NON_NUMBER_CARDS.each do |card|
       cards["|#{card}\u2660|"] = card_value
       cards["|#{card}\u2665|"] = card_value
       cards["|#{card}\u2663|"] = card_value
