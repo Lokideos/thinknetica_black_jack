@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 class GameSession
-  attr_accessor :round, :turn
+  attr_accessor :round
 
   def initialize
     @round = 0
-    @turn = 1
   end
 
   def handle_ace_for(actor)

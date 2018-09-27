@@ -34,20 +34,13 @@ module GameUI
         case choice
         when "take"
           fill_hand_for(player, game_session, deck)
-          game_session.turn += 1
 
-          if dealer.points < 17
-            fill_hand_for(dealer, game_session, deck)
-            game_session.turn += 1
-          end
+          fill_hand_for(dealer, game_session, deck) if dealer.points < 17
 
           show_match_results(player, dealer)
           break
         when "pass"
-          if dealer.points < 17
-            fill_hand_for(dealer, game_session, deck)
-            game_session.turn += 1
-          end
+          fill_hand_for(dealer, game_session, deck) if dealer.points < 17
 
           show_match_results(player, dealer)
         when "check"
@@ -83,6 +76,8 @@ module GameUI
       deck.remove_card(card)
     end
 
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def show_match_results(player, dealer)
       show_player_stats(player)
       puts
@@ -95,6 +90,8 @@ module GameUI
       puts
       puts result
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     def show_player_stats(player)
       puts "Player hand: #{player.hand}"
