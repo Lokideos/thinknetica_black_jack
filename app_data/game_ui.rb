@@ -20,7 +20,16 @@ module GameUI
       print "Please, type in your name: "
       name = gets.chomp
       game_session = GameSession.new
-      player = Player.new(name)
+      begin
+        player = Player.new(name)
+      rescue RuntimeError => e
+        puts
+        puts "There was en error: #{e.message}"
+        puts "You didn't provide correct name."
+        puts "Therefore, your name will be called HACKERMAN."
+        name = "HACKERMAN"
+        player = Player.new(name)
+      end
       dealer = Dealer.new
       deck = Deck.new
       puts
