@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+require_relative "support/cardable"
+
 class Player
+  include Cardable
+
   attr_accessor :bank, :hand, :name, :points
 
   def initialize(name)
@@ -8,13 +12,5 @@ class Player
     @bank = 100
     @hand = []
     @points = 0
-  end
-
-  def take_card(card)
-    @hand << card
-  end
-
-  def empty_hand
-    @hand = []
   end
 end

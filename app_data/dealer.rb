@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+require_relative "support/cardable"
+
 class Dealer
+  include Cardable
+
   attr_accessor :bank, :hand, :points
   attr_reader :name
 
@@ -9,13 +13,5 @@ class Dealer
     @bank = 100
     @hand = []
     @points = 0
-  end
-
-  def take_card(card)
-    @hand << card
-  end
-
-  def empty_hand
-    @hand = []
   end
 end
