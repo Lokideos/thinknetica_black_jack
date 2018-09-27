@@ -4,7 +4,7 @@ class GameSession
   attr_accessor :round, :turn
 
   def initialize
-    @round = 1
+    @round = 0
     @turn = 1
   end
 
