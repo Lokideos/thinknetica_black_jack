@@ -15,12 +15,20 @@ loop do
   2.times do
     card = deck.cards.keys[rand(deck.cards.keys.size)]
     player.take_card(card)
-    player.points += deck.cards[card]
+    if deck.cards[card] == :a
+      game_session.handle_ace_for(player)
+    else
+      player.points += deck.cards[card]
+    end
     deck.remove_card(card)
 
     card = deck.cards.keys[rand(deck.cards.keys.size)]
     dealer.take_card(card)
-    dealer.points += deck.cards[card]
+    if deck.cards[card] == :a
+      game_session.handle_ace_for(dealer)
+    else
+      dealer.points += deck.cards[card]
+    end
     deck.remove_card(card)
   end
 
@@ -38,10 +46,14 @@ loop do
   choice = gets.chomp
 
   case choice
-  when "take card"
+  when "take"
     card = deck.cards.keys[rand(deck.cards.keys.size)]
     player.take_card(card)
-    player.points += deck.cards[card]
+    if deck.cards[card] == :a
+      game_session.handle_ace_for(player)
+    else
+      player.points += deck.cards[card]
+    end
     deck.remove_card(card)
 
     game_session.round += 1
@@ -49,7 +61,11 @@ loop do
     if dealer.points < 17
       card = deck.cards.keys[rand(deck.cards.keys.size)]
       dealer.take_card(card)
-      dealer.points += deck.cards[card]
+      if deck.cards[card] == :a
+        game_session.handle_ace_for(dealer)
+      else
+        dealer.points += deck.cards[card]
+      end
       deck.remove_card(card)
 
       game_session.round += 1
@@ -61,7 +77,7 @@ loop do
       puts "Dealer hand :#{dealer.hand}"
       puts "Dealer points: #{dealer.points}"
       result = "You lost it. (O_O)" if player.points > 21
-      result ||= "You lost it. (O_O)" if dealer.points > player.points
+      result ||= "You lost it. (O_O)" if dealer.points > player.points && dealer.points < 21
       result ||= "You win" if player.points > dealer.points
       result ||= "You win" if dealer.points > player.points && dealer.points > 21
     end
@@ -71,7 +87,7 @@ loop do
     puts "Dealer hand :#{dealer.hand}"
     puts "Dealer points: #{dealer.points}"
     result = "You lost it. (O_O)" if player.points > 21
-    result ||= "You lost it. (O_O)" if dealer.points > player.points
+    result ||= "You lost it. (O_O)" if dealer.points > player.points && dealer.points < 21
     result ||= "You win" if player.points > dealer.points
     result ||= "You win" if dealer.points > player.points && dealer.points > 21
   else
