@@ -37,56 +37,52 @@ module GameUI
       puts
       loop do
         start_round(game_session, player, dealer, deck)
-        puts "_______________________"
-        puts "Round: #{game_session.round}"
-        puts "_______________________"
-        show_player_stats(player)
-        puts
-        show_short_dealer_stats(dealer)
+        show_round_counter(game_session)
+        show_player_side(player)
+        show_dealer_side(dealer)
         puts
         puts "You can take another card, pass or try to win now."
         loop do
           puts "Type in 'take' to take card, 'pass', to pass or 'check' to finish this turn."
-          choice = gets.chomp
+          choice = gets.chomp.downcase
           case choice
           when "take"
             fill_hand_for(player, game_session, deck)
-
             fill_hand_for(dealer, game_session, deck) if dealer.points < 17
 
+            show_player_side(player)
+            show_dealer_side(dealer)
             show_match_results(player, dealer)
-            puts
-            puts "Player bank: #{player.bank}"
-            puts
             break
           when "pass"
             fill_hand_for(dealer, game_session, deck) if dealer.points < 17
 
+            show_player_side(player)
+            show_dealer_side(dealer)
             show_match_results(player, dealer)
-            puts
-            puts "Player bank: #{player.bank}"
-            puts
             break
           when "check"
             show_match_results(player, dealer)
-            puts
-            puts "Player bank: #{player.bank}"
-            puts
+
+            show_player_side(player)
+            show_dealer_side(dealer)
             break
           else
-            puts "Wrong input. Please type in your choice again."
+            puts "WRONG LITTLE LETTERS! TRY AGAIN!!!"
           end
         end
 
         if dealer.bank <= 0 || player.bank <= 0
-          puts "You've won the game" if dealer.bank <= 0
-          puts "You've completely lost" if player.bank <= 0
+          puts "!!!CONGRATULATIONS! YOU HAVE WON THE GAME!!!" if dealer.bank <= 0
+          puts "!!!CONGRATULATIONS!!! YOU HAVE COMPLETELE LOST!!!" if player.bank <= 0
           break
         end
 
-        puts "Press any key if you want to continue."
-        puts "Press no if you want to exit the game."
-        choice = gets.chomp
+        puts "!!!PRESS ANYTHING TO CONTINUE!!!"
+        puts
+        puts "In case that you don't want to continue to play in this amazing game,"
+        puts "type in 'no' and press enter."
+        choice = gets.chomp.downcase
         break if choice == "no"
       end
     end
@@ -123,51 +119,76 @@ module GameUI
 
     # rubocop:disable Style/GuardClause
     def show_match_results(player, dealer)
-      show_player_stats(player)
-      puts
-      show_full_dealer_stats(dealer)
       if (player.points > 21) || ((dealer.points > player.points) && dealer.points <= 21)
-        result ||= "You've lost the round"
+        result ||= "!!!YOU HAVE LOST THE ROUND!!!"
         dealer.bank += 20
         puts
         puts result
+        puts
         return result
       end
 
       if (player.points > dealer.points) || ((dealer.points > player.points) && dealer.points > 21)
-        result ||= "You've won the round"
+        result ||= "!!!YOU HAVE WON THE ROUND!!!"
         player.bank += 20
         puts
         puts result
+        puts
         return result
       end
 
       if dealer.points == player.points
-        result ||= "This is draw"
+        result ||= "!!!OH!!!THIS IS DRAW!!!OH!!!"
         player.bank += 10
         dealer.bank += 10
         puts
         puts result
-        return result
+        puts
       end
     end
     # rubocop:enable Style/GuardClause
 
-    def show_player_stats(player)
-      puts "Player hand: #{player.hand}"
-      puts "Player points: #{player.points}"
-      puts "Player bank: #{player.bank}"
+    # rubocop:disable Metrics/LineLength
+    def show_round_counter(game_session)
+      puts "_______________________"
+      puts "Round: #{game_session.round}"
+      puts "_______________________"
+      puts
+      puts
+      puts
     end
 
-    def show_short_dealer_stats(dealer)
-      puts "Dealer bank: #{dealer.bank}"
+    def show_player_side(player)
+      puts
+      puts "__________________________________________________________________________________________________________________"
+      puts
+      puts "                    #{player.name}                       "
+      puts
+      puts "                  YOUR BANK: #{player.bank}              "
+      puts
+      puts "                  YOUR SUM:  #{player.points}            "
+      puts "_________________________________________________________"
+      puts
+      puts "                 #{player.hand.first}     #{player.hand[1]}     #{player.hand[2]}"
+      puts
     end
 
-    def show_full_dealer_stats(dealer)
-      puts "Dealer hand: #{dealer.hand}"
-      puts "Dealer points: #{dealer.points}"
-      puts "Dealer bank: #{dealer.bank}"
+    def show_dealer_side(dealer)
+      puts
+      puts "                 #{dealer.hand.first}     #{dealer.hand[1]}     #{dealer.hand[2]}"
+      puts
+      puts "_________________________________________________________"
+      puts
+      puts "                DEALER SUM:  #{dealer.points}            "
+      puts
+      puts "                DEALER BANK: #{dealer.bank}              "
+      puts
+      puts "                  !!!DEALER!!!                           "
+      puts
+      puts "__________________________________________________________________________________________________________________"
+      puts
     end
+    # rubocop:enable Metrics/LineLength
   end
 end
 # rubocop:enable Metrics/MethodLength
