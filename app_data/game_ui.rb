@@ -43,6 +43,7 @@ module GameUI
           fill_hand_for(dealer, game_session, deck) if dealer.points < 17
 
           show_match_results(player, dealer)
+          break
         when "check"
           show_match_results(player, dealer)
           break
