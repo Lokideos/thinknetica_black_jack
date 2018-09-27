@@ -6,7 +6,11 @@ require_relative "deck"
 require_relative "game_session"
 
 # rubocop:disable Metrics/MethodLength
+# rubocop:disable Metrics/ModuleLength
 # rubocop:disable Metrics/AbcSize
+# rubocop:disable Metrics/CyclomaticComplexity
+# rubocop:disable Metrics/PerceivedComplexity
+# rubocop:disable Metrics/BlockLength
 module GameUI
   class << self
     def show_menu
@@ -22,40 +26,71 @@ module GameUI
       puts
       puts "Welcome to the game, #{player.name}!"
       puts
-      start_round(game_session, player, dealer, deck)
-      show_player_stats(player)
-      puts
-      show_short_dealer_stats(dealer)
-      puts
-      puts "You can take another card, pass or try to win now."
       loop do
-        puts "Type in 'take' to take card, 'pass', to pass or 'check' to finish this turn."
-        choice = gets.chomp
-        case choice
-        when "take"
-          fill_hand_for(player, game_session, deck)
+        start_round(game_session, player, dealer, deck)
+        puts "_______________________"
+        puts "Round: #{game_session.round}"
+        puts "_______________________"
+        show_player_stats(player)
+        puts
+        show_short_dealer_stats(dealer)
+        puts
+        puts "You can take another card, pass or try to win now."
+        loop do
+          puts "Type in 'take' to take card, 'pass', to pass or 'check' to finish this turn."
+          choice = gets.chomp
+          case choice
+          when "take"
+            fill_hand_for(player, game_session, deck)
 
-          fill_hand_for(dealer, game_session, deck) if dealer.points < 17
+            fill_hand_for(dealer, game_session, deck) if dealer.points < 17
 
-          show_match_results(player, dealer)
-          break
-        when "pass"
-          fill_hand_for(dealer, game_session, deck) if dealer.points < 17
+            show_match_results(player, dealer)
+            puts
+            puts "Player bank: #{player.bank}"
+            puts
+            break
+          when "pass"
+            fill_hand_for(dealer, game_session, deck) if dealer.points < 17
 
-          show_match_results(player, dealer)
-          break
-        when "check"
-          show_match_results(player, dealer)
-          break
-        else
-          puts "Wrong input. Please type in your choice again."
+            show_match_results(player, dealer)
+            puts
+            puts "Player bank: #{player.bank}"
+            puts
+            break
+          when "check"
+            show_match_results(player, dealer)
+            puts
+            puts "Player bank: #{player.bank}"
+            puts
+            break
+          else
+            puts "Wrong input. Please type in your choice again."
+          end
         end
+
+        if dealer.bank <= 0 || player.bank <= 0
+          puts "You've won the game" if dealer.bank <= 0
+          puts "You've completely lost" if player.bank <= 0
+          break
+        end
+
+        puts "Press any key if you want to continue."
+        puts "Press no if you want to exit the game."
+        choice = gets.chomp
+        break if choice == "no"
       end
     end
 
     private
 
     def start_round(game_session, player, dealer, deck)
+      deck.cards = {}
+      deck.fill_deck
+      player.hand = []
+      dealer.hand = []
+      player.points = 0
+      dealer.points = 0
       player.bank -= 10
       dealer.bank -= 10
       game_session.round += 1
@@ -77,22 +112,37 @@ module GameUI
       deck.remove_card(card)
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
-    # rubocop:disable Metrics/PerceivedComplexity
+    # rubocop:disable Style/GuardClause
     def show_match_results(player, dealer)
       show_player_stats(player)
       puts
       show_full_dealer_stats(dealer)
-      result = "You lost it. (O_O)" if player.points > 21
-      result ||= "You lost it. (O_O)" if dealer.points > player.points && dealer.points <= 21
-      result ||= "You win" if player.points > dealer.points
-      result ||= "You win" if dealer.points > player.points && dealer.points > 21
-      result ||= "This is draw" if dealer.points == player.points
-      puts
-      puts result
+      if (player.points > 21) || ((dealer.points > player.points) && dealer.points <= 21)
+        result ||= "You've lost the round"
+        dealer.bank += 20
+        puts
+        puts result
+        return result
+      end
+
+      if (player.points > dealer.points) || ((dealer.points > player.points) && dealer.points > 21)
+        result ||= "You've won the round"
+        player.bank += 20
+        puts
+        puts result
+        return result
+      end
+
+      if dealer.points == player.points
+        result ||= "This is draw"
+        player.bank += 10
+        dealer.bank += 10
+        puts
+        puts result
+        return result
+      end
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
-    # rubocop:enable Metrics/PerceivedComplexity
+    # rubocop:enable Style/GuardClause
 
     def show_player_stats(player)
       puts "Player hand: #{player.hand}"
@@ -112,4 +162,8 @@ module GameUI
   end
 end
 # rubocop:enable Metrics/MethodLength
+# rubocop:enable Metrics/ModuleLength
 # rubocop:enable Metrics/AbcSize
+# rubocop:enable Metrics/CyclomaticComplexity
+# rubocop:enable Metrics/PerceivedComplexity
+# rubocop:enable Metrics/BlockLength
