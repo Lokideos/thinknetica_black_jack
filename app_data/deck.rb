@@ -13,8 +13,7 @@ class Deck
     @cards = fill_deck
   end
 
-  def remove_card(suit, rank)
-    card = find_card(suit, rank)
+  def remove_card(card)
     cards.delete(card)
   end
 
@@ -27,10 +26,4 @@ class Deck
   end
 
   alias build_deck fill_deck
-
-  private
-
-  def find_card(suit, rank)
-    cards.find { |card| rank == card.rank && suit == card.suit }
-  end
 end
