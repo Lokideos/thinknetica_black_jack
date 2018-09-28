@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "app_data/main_ui"
+require_relative "app_data/main_terminal_ui"
 
-MainUI.show_menu
+MainTerminalUI.show_menu
