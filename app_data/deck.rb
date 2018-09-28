@@ -1,57 +1,29 @@
 # frozen_string_literal: true
 
+require_relative "card"
+
 class Deck
   attr_accessor :cards
 
-  BASIC_CARDS = %w[2 3 4 5 6 7 8 9 10].freeze
-  NON_NUMBER_CARDS = %w[J Q K].freeze
-  LOWEST_VALUE = 2
-  HIGHEST_VALUE = 10
+  SUITS = ["\u2660", "\u2665", "\u2663", "\u2666"].freeze
+  RANKS_WITH_VALUES = [["2", 2], ["3", 3], ["4", 4], ["5", 5], ["6", 6], ["7", 7], ["8", 8],
+                       ["9", 9], ["10", 10], ["J", 10], ["Q", 10], ["K", 10], ["A", :a]].freeze
 
   def initialize
-    @cards = {}
-    fill_deck
-  end
-
-  def fill_deck
-    fill_deck_with_basic_cards
-    fill_deck_with_ten_value_cards
-    fill_deck_with_aces
-  end
-
-  def fill_deck_with_basic_cards
-    card_value = LOWEST_VALUE
-
-    BASIC_CARDS.each do |card|
-      cards["|#{card}\u2660|"] = card_value
-      cards["|#{card}\u2665|"] = card_value
-      cards["|#{card}\u2663|"] = card_value
-      cards["|#{card}\u2666|"] = card_value
-      card_value += 1
-    end
-  end
-
-  def fill_deck_with_ten_value_cards
-    card_value = HIGHEST_VALUE
-
-    NON_NUMBER_CARDS.each do |card|
-      cards["|#{card}\u2660|"] = card_value
-      cards["|#{card}\u2665|"] = card_value
-      cards["|#{card}\u2663|"] = card_value
-      cards["|#{card}\u2666|"] = card_value
-    end
-  end
-
-  def fill_deck_with_aces
-    card_value = :a
-
-    cards["|A\u2660|"] = card_value
-    cards["|A\u2665|"] = card_value
-    cards["|A\u2663|"] = card_value
-    cards["|A\u2666|"] = card_value
+    @cards = fill_deck
   end
 
   def remove_card(card)
     cards.delete(card)
   end
+
+  def fill_deck
+    RANKS_WITH_VALUES.each_with_object([]) do |rank, a|
+      SUITS.each do |suit|
+        a << Card.new(rank[0], suit, rank[1])
+      end
+    end.shuffle!
+  end
+
+  alias build_deck fill_deck
 end
