@@ -11,9 +11,9 @@ require_relative "player"
 class GameSession
   attr_accessor :round, :player, :deck, :dealer
 
-  def initialize(player)
+  def initialize(name)
     @round = 0
-    @player = player
+    @player = Player.new(name)
     @dealer = Dealer.new
     @deck = Deck.new
   end

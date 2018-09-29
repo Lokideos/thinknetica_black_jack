@@ -18,16 +18,15 @@ module GameTerminalUI
       print "Please, type in your name: "
       name = gets.chomp
       begin
-        player = Player.new(name)
+        game_session = GameSession.new(name)
       rescue RuntimeError => e
         puts
         puts "There was en error: #{e.message}"
         puts "You didn't provide correct name."
-        puts "Therefore, your name will be called HACKERMAN."
+        puts "Therefore, you will be called HACKERMAN."
         name = "HACKERMAN"
-        player = Player.new(name)
+        game_session = GameSession.new(name)
       end
-      game_session = GameSession.new(player)
       puts
       puts "Welcome to the game, #{game_session.player.name}!"
       puts
