@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+require_relative "support/validations"
+
 class Card
+  include Validations
+
   attr_accessor :rank, :suit
   attr_reader :value
 
@@ -17,10 +21,20 @@ class Card
     end
   end
 
+  RANK_FORMAT = /^[23456789JQKA]{1}$|^[1]{1}[0]{1}$/
+  SUIT_FORMAT = /^[\u{2660}\u{2665}\u{2663}\u{2666}]{1}$/
+
+  validate :rank, :presence
+  validate :suit, :presence
+
+  validate :rank, :format, RANK_FORMAT
+  validate :suit, :format, SUIT_FORMAT
+
   def initialize(rank, suit)
     @rank = rank
     @suit = suit
     @value = assign_value(rank)
+    validate!
   end
 
   def assign_value(rank)

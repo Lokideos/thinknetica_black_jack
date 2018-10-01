@@ -9,6 +9,7 @@ module Validations
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/LineLength
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/CyclomaticComplexity
   module ClassMethods
     def validate(attr_name, validation_type, *args)
       attribute_name = attr_name.to_sym
@@ -28,11 +29,17 @@ module Validations
             raise "Wrong type."
           end
         end
+      when :format
+        define_method(validation_type_name) do
+          unless instance_variable_get("@#{attribute_name}".to_sym).match? option
+            raise "Wrong format of @#{attribute_name}"
+          end
+        end
       end
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/AbcSize
-
   # rubocop:enable Metrics/LineLength
   # rubocop:enable Metrics/MethodLength
 
@@ -40,6 +47,7 @@ module Validations
     def validate!
       presence if methods.find { |method_name| method_name == :presence }
       type if methods.find { |method_name| method_name == :type }
+      format if methods.find { |method_name| method_name == :format }
       true
     end
 
