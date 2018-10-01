@@ -7,8 +7,8 @@ class Deck
 
   def initialize; end
 
-  def remove_card(card)
-    cards.delete(card)
+  def give_card
+    cards.pop
   end
 
   def fill_deck

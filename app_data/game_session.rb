@@ -59,11 +59,9 @@ class GameSession
   private
 
   def fill_hand_for(actor, deck)
-    card = deck.cards.first
+    card = deck.give_card
     actor.take_card(card)
     card.value == 11 ? handle_ace_for(actor) : actor.points += card.value
-
-    deck.remove_card(card)
   end
 
   def handle_ace_for(actor)
