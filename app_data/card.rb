@@ -39,8 +39,8 @@ class Card
 
   def assign_value(rank)
     value = 11
-    value = rank.to_i if rank.to_i != 0
-    value = 10 if rank.class.to_s == "String" && rank != "A"
+    value = rank.to_i unless rank.to_i.zero?
+    value = 10 if rank.to_i.zero? && rank != "A"
     value
   end
 end

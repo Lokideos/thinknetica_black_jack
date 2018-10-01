@@ -5,9 +5,7 @@ require_relative "card"
 class Deck
   attr_accessor :cards
 
-  def initialize
-    @cards = fill_deck
-  end
+  def initialize; end
 
   def remove_card(card)
     cards.delete(card)
