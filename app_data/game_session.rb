@@ -88,39 +88,41 @@ class GameSession
     fill_hand_for(player) if player_decision == :take
   end
 
+  # rubocop:disable Metrics/MethodLength
   def calculate_match_results
-    result = check_for_defeat
-    result ||= check_for_victory
-    result ||= check_for_draw
-    result
-  end
-
-  # rubocop:disable Metrics/AbcSize
-  def check_for_defeat
-    if (points_of(player) > 21) ||
-       ((points_of(dealer) > points_of(player)) &&
-       points_of(dealer) <= 21)
+    if defeat?
       dealer.bank += 20
-      :defeat
+      return :defeat
     end
-  end
 
-  def check_for_victory
-    if (points_of(player) > points_of(dealer)) ||
-       ((points_of(dealer) > points_of(player)) &&
-                        points_of(dealer) > 21)
+    if victory?
       player.bank += 20
-      :victory
+      return :victory
     end
-  end
-  # rubocop:enable Metrics/AbcSize
 
-  def check_for_draw
-    return unless points_of(dealer) == points_of(player)
+    if draw?
+      player.bank += 10
+      dealer.bank += 10
+    end
 
-    player.bank += 10
-    dealer.bank += 10
     :draw
+  end
+  # rubocop:enable Metrics/MethodLength
+
+  def defeat?
+    (points_of(player) > 21) ||
+      ((points_of(dealer) > points_of(player)) &&
+      points_of(dealer) <= 21)
+  end
+
+  def victory?
+    (points_of(player) > points_of(dealer)) ||
+      ((points_of(dealer) > points_of(player)) &&
+                       points_of(dealer) > 21)
+  end
+
+  def draw?
+    points_of(dealer) == points_of(player)
   end
 
   def check_victory_conditions
