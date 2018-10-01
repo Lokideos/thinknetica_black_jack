@@ -29,24 +29,6 @@ class GameSession
     end
   end
 
-  # def fill_players_hands
-  #   2.times do
-  #     card = deck.give_card
-  #     player.hand.take_card(card)
-  #     dealer.hand.take_card(card)
-  #   end
-  # end
-
-  # def empty_hands
-  #   player.hand.withdraw_cards
-  #   dealer.hand.withdraw_cards
-  # end
-
-  # def money_to_bank
-  #   player.bank -= 10
-  #   dealer.bank -= 10
-  # end
-
   def play_round(player_decision)
     # Some method documentation:
     # returns array with round result in 'sym' (:victory, :defeat or :draw)
