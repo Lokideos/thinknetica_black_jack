@@ -21,7 +21,7 @@ class Card
     end
   end
 
-  RANK_FORMAT = /^[23456789JQKA]{1}$|^[1]{1}[0]{1}$/
+  RANK_FORMAT = /^[2-9JQKA]{1}$|^[1]{1}[0]{1}$/
   SUIT_FORMAT = /^[\u{2660}\u{2665}\u{2663}\u{2666}]{1}$/
 
   validate :rank, :presence
