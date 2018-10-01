@@ -21,30 +21,31 @@ class GameSession
   def start_round
     deck.cards = deck.fill_deck
     self.round += 1
-    reset_points
+    empty_hands
     money_to_bank
-    fill_players_hands
-  end
-
-  def fill_players_hands
-    player.hand = []
-    dealer.hand = []
-
     2.times do
-      fill_hand_for(player, deck)
-      fill_hand_for(dealer, deck)
+      fill_hand_for(player)
+      fill_hand_for(dealer)
     end
   end
 
-  def reset_points
-    player.points = 0
-    dealer.points = 0
-  end
+  # def fill_players_hands
+  #   2.times do
+  #     card = deck.give_card
+  #     player.hand.take_card(card)
+  #     dealer.hand.take_card(card)
+  #   end
+  # end
 
-  def money_to_bank
-    player.bank -= 10
-    dealer.bank -= 10
-  end
+  # def empty_hands
+  #   player.hand.withdraw_cards
+  #   dealer.hand.withdraw_cards
+  # end
+
+  # def money_to_bank
+  #   player.bank -= 10
+  #   dealer.bank -= 10
+  # end
 
   def play_round(player_decision)
     # Some method documentation:
@@ -58,10 +59,19 @@ class GameSession
 
   private
 
-  def fill_hand_for(actor, deck)
+  def fill_hand_for(actor)
     card = deck.give_card
-    actor.take_card(card)
-    card.value == 11 ? handle_ace_for(actor) : actor.points += card.value
+    actor.hand.take_card(card)
+  end
+
+  def empty_hands
+    player.hand.withdraw_cards
+    dealer.hand.withdraw_cards
+  end
+
+  def money_to_bank
+    player.bank -= 10
+    dealer.bank -= 10
   end
 
   def handle_ace_for(actor)
@@ -73,9 +83,9 @@ class GameSession
   def choose_round_flow(player_decision)
     # Some method documentation:
     # Choice in case of wrong input is :pass
-    fill_hand_for(dealer, deck) if dealer.points < 17 && player_decision != :check
+    return fill_hand_for(dealer) if dealer.hand.points < 17 && player_decision != :check
 
-    fill_hand_for(player, deck) if player_decision == :take
+    fill_hand_for(player) if player_decision == :take
   end
 
   def calculate_match_results
@@ -86,16 +96,19 @@ class GameSession
   end
 
   # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Style/GuardClause
   def check_for_defeat
-    if (player.points > 21) || ((dealer.points > player.points) && dealer.points <= 21)
+    if (points_of(player) > 21) ||
+       ((points_of(dealer) > points_of(player)) &&
+       points_of(dealer) <= 21)
       dealer.bank += 20
       :defeat
     end
   end
 
   def check_for_victory
-    if (player.points > dealer.points) || ((dealer.points > player.points) && dealer.points > 21)
+    if (points_of(player) > points_of(dealer)) ||
+       ((points_of(dealer) > points_of(player)) &&
+                        points_of(dealer) > 21)
       player.bank += 20
       :victory
     end
@@ -103,18 +116,21 @@ class GameSession
   # rubocop:enable Metrics/AbcSize
 
   def check_for_draw
-    if dealer.points == player.points
-      player.bank += 10
-      dealer.bank += 10
-      :draw
-    end
+    return unless points_of(dealer) == points_of(player)
+
+    player.bank += 10
+    dealer.bank += 10
+    :draw
   end
-  # rubocop:enable Style/GuardClause
 
   def check_victory_conditions
     return :game_won if dealer.bank <= 0
     return :game_lost if player.bank <= 0
 
     :continue
+  end
+
+  def points_of(actor)
+    actor.hand.points
   end
 end

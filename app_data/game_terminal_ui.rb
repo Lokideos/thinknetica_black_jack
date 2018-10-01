@@ -84,7 +84,7 @@ module GameTerminalUI
       puts
       puts "                  YOUR BANK: #{game_session.player.bank}              "
       puts
-      puts "                  YOUR SUM:  #{game_session.player.points}            "
+      puts "                  YOUR SUM:  #{game_session.player.hand.points}       "
       puts "______________________________________________________________________"
       puts
       puts "                 #{cards_of(game_session.player)}                     "
@@ -113,7 +113,7 @@ module GameTerminalUI
       puts
       puts "______________________________________________________________________"
       puts
-      puts "                DEALER SUM:  #{game_session.dealer.points}            "
+      puts "                DEALER SUM:  #{game_session.dealer.hand.points}       "
       puts
       puts "                DEALER BANK: #{game_session.dealer.bank}              "
       puts
@@ -128,15 +128,15 @@ module GameTerminalUI
     end
 
     def first_card_of(actor)
-      "|#{actor.hand.first.rank}#{actor.hand.first.suit}|"
+      "|#{actor.hand.cards.first.rank}#{actor.hand.cards.first.suit}|"
     end
 
     def second_card_of(actor)
-      "|#{actor.hand[1].rank}#{actor.hand[1].suit}|"
+      "|#{actor.hand.cards[1].rank}#{actor.hand.cards[1].suit}|"
     end
 
     def third_card_of(actor)
-      "|#{actor.hand[2].rank}#{actor.hand[2].suit}|" if actor.hand[2]
+      "|#{actor.hand.cards[2].rank}#{actor.hand.cards[2].suit}|" if actor.hand.cards[2]
     end
     # rubocop:enable Metrics/LineLength
   end
