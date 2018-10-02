@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "game_ui"
+require_relative "game_terminal_ui"
 
 # rubocop:disable Metrics/MethodLength
 # rubocop:disable Metrics/AbcSize
-module MainUI
+module MainTerminalUI
   MENU_OPTIONS = {
     1 => "NEW GAME",
     2 => "OPTIONS",
@@ -31,7 +31,7 @@ module MainUI
         case choice
         when 1
           puts
-          GameUI.show_menu
+          GameTerminalUI.show_menu
         when 2
           puts
           puts "No options here."
